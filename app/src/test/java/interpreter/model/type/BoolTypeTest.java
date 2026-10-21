@@ -1,4 +1,3 @@
-
 package interpreter.model.type;
 
 import interpreter.model.value.BoolValue;
@@ -9,17 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TypeTest {
-
-    @Test
-    void testIntTypeDefaultValue() {
-        IType type = new IntType();
-        IValue value = type.defaultValue();
-
-        assertInstanceOf(IntValue.class, value);
-        assertEquals(0, ((IntValue) value).getValue());
-    }
-
+public class BoolTypeTest {
     @Test
     void testBoolTypeDefaultValue() {
         IType type = new BoolType();
@@ -28,11 +17,9 @@ public class TypeTest {
         assertInstanceOf(BoolValue.class, value);
         assertFalse(((BoolValue) value).getValue());
     }
-
     @Test
-    void testTypeEquality() {
-        assertEquals(new IntType(), new IntType());
+    void testBoolTypeEquality() {
         assertEquals(new BoolType(), new BoolType());
-        assertNotEquals(new IntType(), new BoolType());
+        assertNotEquals(new BoolType(), new IntType());
     }
 }
