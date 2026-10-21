@@ -11,39 +11,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExpressionsTest {
-
-    @Test
-    void testValueExp() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
-        IExp exp = new ValueExp(new IntValue(10));
-
-        IntValue result = (IntValue) exp.eval(table);
-        assertEquals(10, result.getValue());
-    }
-
-    @Test
-    void testVarExp() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-        table.put("x", new IntValue(25));
-
-        IExp exp = new VarExp("x");
-
-        IntValue result = (IntValue) exp.eval(table);
-        assertEquals(25, result.getValue());
-    }
-
-    @Test
-    void testMissingVariable() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
-        IExp exp = new VarExp("missing");
-
-        assertThrows(NoSuchElementException.class,
-                () -> exp.eval(table));
-    }
-
+public class ArithExpTest {
     @Test
     void testArithmeticOperations() {
         IDictionary<String, IValue> table = new MyDictionary<>();
@@ -91,46 +59,4 @@ public class ExpressionsTest {
         assertThrows(RuntimeException.class,
                 () -> exp.eval(table));
     }
-
-    @Test
-    void testLogicalOperations() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
-        IExp a = new ValueExp(new BoolValue(true));
-        IExp b = new ValueExp(new BoolValue(false));
-
-        assertFalse(((BoolValue)
-                new LogicExp(a, b, 1).eval(table)).getValue());
-
-        assertTrue(((BoolValue)
-                new LogicExp(a, b, 2).eval(table)).getValue());
-    }
-
-    @Test
-    void testInvalidLogicalType() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
-        IExp exp = new LogicExp(
-                new ValueExp(new BoolValue(true)),
-                new ValueExp(new IntValue(5)),
-                1
-        );
-
-        assertThrows(RuntimeException.class,
-                () -> exp.eval(table));
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
