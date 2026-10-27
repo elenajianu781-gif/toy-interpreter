@@ -1,13 +1,9 @@
 package interpreter.model.exp;
+
 import interpreter.model.adt.IDictionary;
 import interpreter.model.value.IValue;
 
-public class ValueExp implements  IExp {
-    private final IValue value;
-
-    public ValueExp(IValue value) {
-        this.value = value;
-    }
+public record ValueExp(IValue value) implements IExp {
 
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) {
@@ -18,5 +14,4 @@ public class ValueExp implements  IExp {
     public String toString() {
         return value.toString();
     }
-
 }

@@ -1,5 +1,5 @@
 package interpreter.model.exp;
-
+import interpreter.exceptions.ExpressionException;
 import interpreter.model.adt.IDictionary;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.value.BoolValue;
@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import interpreter.exceptions.MyException;
 public class VarExpTest {
 
     @Test
-    void testVarExp() {
+    void testVarExp() throws MyException {
         IDictionary<String, IValue> table = new MyDictionary<>();
         table.put("x", new IntValue(25));
 
         IExp exp = new VarExp("x");
 
         IntValue result = (IntValue) exp.eval(table);
-        assertEquals(25, result.getValue());
+        assertEquals(25, result.val());
     }
 
     @Test
@@ -31,7 +31,11 @@ public class VarExpTest {
 
         IExp exp = new VarExp("missing");
 
-        assertThrows(NoSuchElementException.class,
-                () -> exp.eval(table));
+
+        assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(table)
+        );
+
     }
 }

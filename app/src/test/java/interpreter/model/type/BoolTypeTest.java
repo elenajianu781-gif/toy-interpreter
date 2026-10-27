@@ -15,7 +15,7 @@ public class BoolTypeTest {
         IValue value = type.defaultValue();
 
         assertInstanceOf(BoolValue.class, value);
-        assertFalse(((BoolValue) value).getValue());
+        assertFalse(((BoolValue) value).val());
     }
     @Test
     void testBoolTypeEquality() {

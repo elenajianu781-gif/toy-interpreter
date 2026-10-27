@@ -1,62 +1,97 @@
 package interpreter.model.exp;
+
+import interpreter.exceptions.ExpressionException;
+import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.value.BoolValue;
-import interpreter.model.value.IntValue;
 import interpreter.model.value.IValue;
-
+import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.Test;
-
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ArithExpTest {
+class ArithExpTest {
+
+    private final IDictionary<String, IValue> symTable =
+            new MyDictionary<>();
+
+    private static IExp num(int n) {
+        return new ValueExp(new IntValue(n));
+    }
+
     @Test
-    void testArithmeticOperations() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
+    void testAddition() throws MyException {
+        IExp exp = new ArithExp(ArithOp.ADD, num(2), num(3));
+        assertEquals(new IntValue(5), exp.eval(symTable));
+    }
 
-        IExp a = new ValueExp(new IntValue(10));
-        IExp b = new ValueExp(new IntValue(5));
+    @Test
+    void testSubtraction() throws MyException {
+        IExp exp = new ArithExp(ArithOp.SUB, num(8), num(3));
+        assertEquals(new IntValue(5), exp.eval(symTable));
+    }
 
-        assertEquals(15, ((IntValue)
-                new ArithExp(a, b, 1).eval(table)).getValue());
+    @Test
+    void testMultiplication() throws MyException {
+        IExp exp = new ArithExp(ArithOp.MUL, num(4), num(5));
+        assertEquals(new IntValue(20), exp.eval(symTable));
+    }
 
-        assertEquals(5, ((IntValue)
-                new ArithExp(a, b, 2).eval(table)).getValue());
-
-        assertEquals(50, ((IntValue)
-                new ArithExp(a, b, 3).eval(table)).getValue());
-
-        assertEquals(2, ((IntValue)
-                new ArithExp(a, b, 4).eval(table)).getValue());
+    @Test
+    void testDivision() throws MyException {
+        IExp exp = new ArithExp(ArithOp.DIV, num(10), num(2));
+        assertEquals(new IntValue(5), exp.eval(symTable));
     }
 
     @Test
     void testDivisionByZero() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
+        IExp exp = new ArithExp(ArithOp.DIV, num(10), num(0));
 
-        IExp exp = new ArithExp(
-                new ValueExp(new IntValue(10)),
-                new ValueExp(new IntValue(0)),
-                4
+        ExpressionException exception = assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(symTable)
         );
 
-        assertThrows(ArithmeticException.class,
-                () -> exp.eval(table));
+        assertEquals("division by zero", exception.getMessage());
     }
 
     @Test
-    void testInvalidArithmeticType() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
+    void testNonIntegerOperand() {
         IExp exp = new ArithExp(
-                new ValueExp(new IntValue(10)),
+                ArithOp.ADD,
                 new ValueExp(new BoolValue(true)),
-                1
+                num(3)
         );
 
-        assertThrows(RuntimeException.class,
-                () -> exp.eval(table));
+        assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(symTable)
+        );
+    }
+
+    @Test
+    void testSecondNonIntegerOperand() {
+        IExp exp = new ArithExp(
+                ArithOp.ADD,
+                num(3),
+                new ValueExp(new BoolValue(false))
+        );
+
+        assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(symTable)
+        );
+    }
+
+    @Test
+    void testOperatorPrecedence() throws MyException {
+        IExp exp = new ArithExp(
+                ArithOp.ADD,
+                num(2),
+                new ArithExp(ArithOp.MUL, num(3), num(5))
+        );
+
+        assertEquals(new IntValue(17), exp.eval(symTable));
     }
 }

@@ -12,7 +12,7 @@ public class BoolValueTest {
     void testBoolValue() {
         BoolValue value = new BoolValue(true);
 
-        assertTrue(value.getValue());
+        assertTrue(value.val());
         assertEquals(new BoolType(), value.getType());
     }
 }

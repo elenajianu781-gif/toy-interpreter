@@ -1,20 +1,9 @@
-
 package interpreter.model.value;
 
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IType;
 
-public class BoolValue implements IValue {
-
-    private final boolean value;
-
-    public BoolValue(boolean value) {
-        this.value = value;
-    }
-
-    public boolean getValue() {
-        return value;
-    }
+public record BoolValue(boolean val) implements IValue {
 
     @Override
     public IType getType() {
@@ -23,6 +12,6 @@ public class BoolValue implements IValue {
 
     @Override
     public String toString() {
-        return Boolean.toString(value);
+        return Boolean.toString(val);
     }
 }

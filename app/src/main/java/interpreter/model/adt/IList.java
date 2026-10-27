@@ -1,8 +1,15 @@
+
 package interpreter.model.adt;
 
-public interface IList<T>{
+import interpreter.exceptions.ADTException;
+
+public interface IList<T> {
+
     void add(T value);
-    T get(int index);
+
+    T get(int index) throws ADTException;
+
     int size();
+
     boolean isEmpty();
 }

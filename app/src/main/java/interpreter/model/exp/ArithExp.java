@@ -1,60 +1,55 @@
 package interpreter.model.exp;
+
+import interpreter.exceptions.ExpressionException;
+import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
-import interpreter.model.type.IntType;
 
-public class ArithExp implements IExp {
+public record ArithExp(
+        ArithOp op,
+        IExp left,
+        IExp right
+) implements IExp {
 
-    private final IExp left;
-    private final IExp right;
-    private final int op;
-
-    public ArithExp(IExp left, IExp right, int op) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
-    }
     @Override
-    public IValue eval(IDictionary<String, IValue> symTable) {
-        IValue v1 = left.eval(symTable);
-        IValue v2 = right.eval(symTable);
+    public IValue eval(IDictionary<String, IValue> symTable)
+            throws MyException {
 
-        if (!v1.getType().equals(new IntType()) ||
-                !v2.getType().equals(new IntType())) {
-            throw new RuntimeException(
-                    "Arithmetic operands must be integers"
+        IValue leftValue = left.eval(symTable);
+
+        if (!(leftValue instanceof IntValue n1)) {
+            throw new ExpressionException(
+                    "first operand is not an integer"
             );
         }
-        int n1 = ((IntValue) v1).getValue();
-        int n2 = ((IntValue) v2).getValue();
+
+        IValue rightValue = right.eval(symTable);
+
+        if (!(rightValue instanceof IntValue n2)) {
+            throw new ExpressionException(
+                    "second operand is not an integer"
+            );
+        }
 
         return switch (op) {
-            case 1 -> new IntValue(n1 + n2);
-            case 2 -> new IntValue(n1 - n2);
-            case 3 -> new IntValue(n1 * n2);
-            case 4 -> {
-                if (n2 == 0) {
-                    throw new ArithmeticException("Division by zero");
+            case ADD -> new IntValue(n1.val() + n2.val());
+            case SUB -> new IntValue(n1.val() - n2.val());
+            case MUL -> new IntValue(n1.val() * n2.val());
+
+            case DIV -> {
+                if (n2.val() == 0) {
+                    throw new ExpressionException(
+                            "division by zero"
+                    );
                 }
-                yield new IntValue(n1 / n2);
+                yield new IntValue(n1.val() / n2.val());
             }
-            default -> throw new IllegalArgumentException(
-                    "Invalid arithmetic operator: " + op
-            );
         };
-
     }
-        @Override
-        public String toString () {
-            String operator = switch (op) {
-                case 1 -> "+";
-                case 2 -> "-";
-                case 3 -> "*";
-                case 4 -> "/";
-                default -> "?";
-            };
 
-            return "(" + left + " " + operator + " " + right + ")";
-        }
+    @Override
+    public String toString() {
+        return "(" + left + " " + op + " " + right + ")";
     }
+}

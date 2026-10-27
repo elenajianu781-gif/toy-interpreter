@@ -15,7 +15,7 @@ public class IntTypeTest {
         IValue value = type.defaultValue();
 
         assertInstanceOf(IntValue.class, value);
-        assertEquals(0, ((IntValue) value).getValue());
+        assertEquals(0, ((IntValue) value). val());
     }
     @Test
     void testIntTypeEquality() {

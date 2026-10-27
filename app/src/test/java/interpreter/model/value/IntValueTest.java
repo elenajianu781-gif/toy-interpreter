@@ -13,7 +13,7 @@ public class IntValueTest {
     void testIntValue() {
         IntValue value = new IntValue(10);
 
-        assertEquals(10, value.getValue());
+        assertEquals(10, value.val());
         assertEquals(new IntType(), value.getType());
     }
 }

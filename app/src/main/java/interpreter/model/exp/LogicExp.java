@@ -1,54 +1,46 @@
+
 package interpreter.model.exp;
+
+import interpreter.exceptions.ExpressionException;
+import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
-import interpreter.model.type.BoolType;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 
-public class LogicExp implements IExp {
-    private final IExp left;
-    private final IExp right;
-    private final int op;
-
-    public LogicExp(IExp left, IExp right, int op) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
-    }
+public record LogicExp(
+        LogicOp op,
+        IExp left,
+        IExp right
+) implements IExp {
 
     @Override
-    public IValue eval(IDictionary<String, IValue> symTable) {
-        IValue v1 = left.eval(symTable);
-        IValue v2 = right.eval(symTable);
+    public IValue eval(IDictionary<String, IValue> symTable)
+            throws MyException {
 
+        IValue leftValue = left.eval(symTable);
 
-        if (!v1.getType().equals(new BoolType()) ||
-                !v2.getType().equals(new BoolType())) {
-            throw new RuntimeException(
-                    "Logical operands must be boolean"
+        if (!(leftValue instanceof BoolValue b1)) {
+            throw new ExpressionException(
+                    "first operand is not a boolean"
             );
         }
-        boolean b1 = ((BoolValue) v1).getValue();
-        boolean b2 = ((BoolValue) v2).getValue();
+
+        IValue rightValue = right.eval(symTable);
+
+        if (!(rightValue instanceof BoolValue b2)) {
+            throw new ExpressionException(
+                    "second operand is not a boolean"
+            );
+        }
 
         return switch (op) {
-            case 1 -> new BoolValue(b1 && b2);
-            case 2 -> new BoolValue(b1 || b2);
-            default -> throw new IllegalArgumentException(
-                    "Invalid logical operator: " + op
-            );
+            case AND -> new BoolValue(b1.val() && b2.val());
+            case OR -> new BoolValue(b1.val() || b2.val());
         };
-
     }
 
     @Override
     public String toString() {
-        String operator = switch (op) {
-            case 1 -> "&&";
-            case 2 -> "||";
-            default -> "?";
-        };
-
-        return "(" + left + " " + operator + " " + right + ")";
+        return "(" + left + " " + op + " " + right + ")";
     }
-
 }

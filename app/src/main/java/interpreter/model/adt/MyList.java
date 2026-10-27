@@ -1,9 +1,12 @@
+
 package interpreter.model.adt;
 
-import java.util.ArrayList;
+import interpreter.exceptions.ADTException;
 import java.util.ArrayList;
 import java.util.List;
+
 public class MyList<T> implements IList<T> {
+
     private final List<T> list;
 
     public MyList() {
@@ -11,22 +14,31 @@ public class MyList<T> implements IList<T> {
     }
 
     @Override
-    public void add(T value){
+    public void add(T value) {
         list.add(value);
     }
 
     @Override
-    public T get(int index){
+    public T get(int index) throws ADTException {
+        if (index < 0 || index >= list.size()) {
+            throw new ADTException("Invalid list index: " + index);
+        }
+
         return list.get(index);
     }
 
     @Override
-    public int size(){
+    public int size() {
         return list.size();
-
     }
+
     @Override
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return list.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return list.toString();
     }
 }

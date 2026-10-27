@@ -1,25 +1,32 @@
 
 package interpreter.model.exp;
 
-import interpreter.model.adt.IDictionary;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
-import interpreter.model.value.IValue;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ValueExpTest {
+class ValueExpTest {
 
     @Test
-    void evaluatesIntegerConstant() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
+    void testIntValue() {
+        ValueExp exp = new ValueExp(new IntValue(10));
 
-        IExp exp = new ValueExp(new IntValue(10));
+        assertEquals(
+                new IntValue(10),
+                exp.eval(new MyDictionary<>())
+        );
+    }
 
-        IValue result = exp.eval(table);
+    @Test
+    void testBoolValue() {
+        ValueExp exp = new ValueExp(new BoolValue(true));
 
-        assertEquals(10, ((IntValue) result).getValue());
+        assertEquals(
+                new BoolValue(true),
+                exp.eval(new MyDictionary<>())
+        );
     }
 }

@@ -2,7 +2,8 @@ package interpreter.model.type;
 
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
-public class IntType implements IType {
+
+public record IntType() implements IType {
 
     @Override
     public IValue defaultValue() {
@@ -12,15 +13,5 @@ public class IntType implements IType {
     @Override
     public String toString() {
         return "int";
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof IntType;
-    }
-
-    @Override
-    public int hashCode() {
-        return IntType.class.hashCode();
     }
 }

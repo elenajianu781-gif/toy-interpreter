@@ -1,42 +1,86 @@
 package interpreter.model.exp;
+
+import interpreter.exceptions.ExpressionException;
+import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import interpreter.model.value.IValue;
-
 import org.junit.jupiter.api.Test;
-
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LogicExpTest {
-    @Test
-    void testLogicalOperations() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
+class LogicExpTest {
 
-        IExp a = new ValueExp(new BoolValue(true));
-        IExp b = new ValueExp(new BoolValue(false));
+    private final IDictionary<String, IValue> symTable =
+            new MyDictionary<>();
 
-        assertFalse(((BoolValue)
-                new LogicExp(a, b, 1).eval(table)).getValue());
-
-        assertTrue(((BoolValue)
-                new LogicExp(a, b, 2).eval(table)).getValue());
+    private static IExp bool(boolean value) {
+        return new ValueExp(new BoolValue(value));
     }
 
     @Test
-    void testInvalidLogicalType() {
-        IDictionary<String, IValue> table = new MyDictionary<>();
-
+    void testAndTrue() throws MyException {
         IExp exp = new LogicExp(
-                new ValueExp(new BoolValue(true)),
-                new ValueExp(new IntValue(5)),
-                1
+                LogicOp.AND, bool(true), bool(true)
         );
 
-        assertThrows(RuntimeException.class,
-                () -> exp.eval(table));
+        assertEquals(new BoolValue(true), exp.eval(symTable));
+    }
+
+    @Test
+    void testAndFalse() throws MyException {
+        IExp exp = new LogicExp(
+                LogicOp.AND, bool(true), bool(false)
+        );
+
+        assertEquals(new BoolValue(false), exp.eval(symTable));
+    }
+
+    @Test
+    void testOrTrue() throws MyException {
+        IExp exp = new LogicExp(
+                LogicOp.OR, bool(false), bool(true)
+        );
+
+        assertEquals(new BoolValue(true), exp.eval(symTable));
+    }
+
+    @Test
+    void testOrFalse() throws MyException {
+        IExp exp = new LogicExp(
+                LogicOp.OR, bool(false), bool(false)
+        );
+
+        assertEquals(new BoolValue(false), exp.eval(symTable));
+    }
+
+    @Test
+    void testFirstOperandWrongType() {
+        IExp exp = new LogicExp(
+                LogicOp.AND,
+                new ValueExp(new IntValue(5)),
+                bool(true)
+        );
+
+        assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(symTable)
+        );
+    }
+
+    @Test
+    void testSecondOperandWrongType() {
+        IExp exp = new LogicExp(
+                LogicOp.OR,
+                bool(false),
+                new ValueExp(new IntValue(5))
+        );
+
+        assertThrows(
+                ExpressionException.class,
+                () -> exp.eval(symTable)
+        );
     }
 }

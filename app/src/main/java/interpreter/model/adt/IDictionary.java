@@ -1,9 +1,11 @@
 package interpreter.model.adt;
 
-public interface IDictionary<K,V> {
-    void put(K key,V value);
-    V get(K key);
-    boolean containsKey(K key);
-    void remove(K key);
+import interpreter.exceptions.ADTException;
 
+public interface IDictionary<K, V> {
+    void put(K key, V value);
+    V lookup(K key) throws ADTException;
+    boolean isDefined(K key);
+    void update(K key, V value) throws ADTException;
+    void remove(K key);
 }
