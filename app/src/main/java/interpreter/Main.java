@@ -1,7 +1,12 @@
 package interpreter;
 
+import interpreter.view.Examples;
+import interpreter.view.TextMenu;
+
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println("Toy Language Interpreter");
+        TextMenu menu = new TextMenu(Examples.getPrograms());
+        menu.show();
     }
 }

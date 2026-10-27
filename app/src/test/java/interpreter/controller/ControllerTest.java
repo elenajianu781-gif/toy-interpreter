@@ -1,6 +1,7 @@
 package interpreter.controller;
 
 import interpreter.exceptions.MyException;
+import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.adt.MyList;
@@ -91,7 +92,7 @@ class ControllerTest {
 
         controller.allStep();
 
-        PrgState result = repository.getCurrentProgram();
+        PrgState result = repository.getCrtPrg();
 
         assertTrue(result.getExeStack().isEmpty());
 
@@ -107,5 +108,26 @@ class ControllerTest {
                 result.getOut().get(0)
         );
     }
+
+
+    @Test
+    void testEmptyStackThrowsStatementException() throws MyException {
+        PrgState state = new PrgState(
+                new MyStack<>(),
+                new MyDictionary<>(),
+                new MyList<>(),
+                new NopStmt()
+        );
+
+        Controller controller = new Controller(new Repository(state));
+
+        controller.oneStep(state);
+
+        assertThrows(
+                StatementException.class,
+                () -> controller.oneStep(state)
+        );
+    }
+
 
 }
