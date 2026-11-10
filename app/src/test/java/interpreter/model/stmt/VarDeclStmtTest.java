@@ -1,5 +1,4 @@
 package interpreter.model.stmt;
-
 import interpreter.exceptions.ADTException;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
@@ -9,8 +8,10 @@ import interpreter.model.adt.MyList;
 import interpreter.model.adt.MyStack;
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IntType;
+import interpreter.model.type.StringType;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.StringValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,4 +61,25 @@ public class VarDeclStmtTest {
         assertThrows(StatementException.class,
                 ()->stmt.execute(state));
     }
+
+
+
+    @Test
+    void stringVariableGetsDefaultValue() throws MyException {
+        PrgState state = new PrgState(
+                new MyStack<>(),
+                new MyDictionary<>(),
+                new MyList<>(),
+                new NopStmt()
+        );
+
+        new VarDeclStmt("s", new StringType()).execute(state);
+
+        assertEquals(
+                new StringValue(""),
+                state.getSymTable().lookup("s")
+        );
+    }
+
+
 }
