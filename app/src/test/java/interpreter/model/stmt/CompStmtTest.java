@@ -14,12 +14,7 @@ class CompStmtTest {
     @Test
     void testExecutionOrder() throws MyException {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         IStmt first = new NopStmt();
         IStmt second = new NopStmt();
@@ -35,12 +30,7 @@ class CompStmtTest {
     @Test
     void testReturnsSameState() {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         CompStmt stmt = new CompStmt(
                 new NopStmt(),

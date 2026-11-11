@@ -23,12 +23,7 @@ class ControllerTest {
 
     private PrgState runProgram(IStmt program) throws MyException {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                program
-        );
+        PrgState state = PrgState.of(program);
 
         Repository repository = new Repository(state);
         Controller controller = new Controller(repository);
@@ -43,13 +38,8 @@ class ControllerTest {
     @Test
     void testOneStep() throws MyException {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new PrintStmt(
-                        new ValueExp(new IntValue(10))
-                )
+        PrgState state = PrgState.of(
+                new PrintStmt(new ValueExp(new IntValue(10)))
         );
 
         Repository repository = new Repository(state);
@@ -69,12 +59,7 @@ class ControllerTest {
     @Test
     void testEmptyStack() throws MyException {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         Repository repository = new Repository(state);
         Controller controller = new Controller(repository);
@@ -102,12 +87,7 @@ class ControllerTest {
                 )
         );
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                program
-        );
+        PrgState state = PrgState.of(program);
 
         Repository repository = new Repository(state);
         Controller controller = new Controller(repository);
@@ -134,12 +114,7 @@ class ControllerTest {
 
     @Test
     void testEmptyStackThrowsStatementException() throws MyException {
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         Controller controller = new Controller(new Repository(state));
 

@@ -81,12 +81,7 @@ public class TextMenu {
         try {
             IStmt program = programs.get(selectedProgram);
 
-            PrgState state = new PrgState(
-                    new MyStack<>(),
-                    new MyDictionary<>(),
-                    new MyList<>(),
-                    program
-            );
+            PrgState state = PrgState.of(program);
 
             Repository repository = new Repository(state);
             Controller controller = new Controller(repository);

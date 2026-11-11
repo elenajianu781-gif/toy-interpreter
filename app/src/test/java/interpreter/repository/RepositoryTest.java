@@ -15,12 +15,7 @@ class RepositoryTest {
     @Test
     void testGetCurrentProgram() {
 
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         Repository repository = new Repository(state);
 

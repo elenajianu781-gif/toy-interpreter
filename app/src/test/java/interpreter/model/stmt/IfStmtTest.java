@@ -17,12 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IfStmtTest {
 
     private PrgState createState() {
-        return new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        return PrgState.of(new NopStmt());
     }
 
     @Test

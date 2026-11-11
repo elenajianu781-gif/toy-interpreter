@@ -3,6 +3,8 @@ package interpreter.model.adt;
 
 import interpreter.exceptions.ADTException;
 
+import java.util.List;
+
 public interface IList<T> {
 
     void add(T value);
@@ -12,4 +14,6 @@ public interface IList<T> {
     int size();
 
     boolean isEmpty();
+
+    List<T> toList();
 }

@@ -13,12 +13,7 @@ class NopStmtTest {
 
     @Test
     void testExecute() {
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         NopStmt stmt = new NopStmt();
 

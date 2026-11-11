@@ -60,7 +60,7 @@ public class MyDictionaryTest {
     }
 
     @Test
-    void testRemove() {
+    void testRemove() throws ADTException{
         IDictionary<String, Integer> dict = new MyDictionary<>();
 
         dict.put("x", 10);

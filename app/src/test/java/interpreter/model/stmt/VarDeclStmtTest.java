@@ -19,10 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class VarDeclStmtTest {
     private PrgState createState() {
-        return new PrgState(new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt());
+        return PrgState.of(new NopStmt());
 
     }
     @Test
@@ -66,12 +63,7 @@ public class VarDeclStmtTest {
 
     @Test
     void stringVariableGetsDefaultValue() throws MyException {
-        PrgState state = new PrgState(
-                new MyStack<>(),
-                new MyDictionary<>(),
-                new MyList<>(),
-                new NopStmt()
-        );
+        PrgState state = PrgState.of(new NopStmt());
 
         new VarDeclStmt("s", new StringType()).execute(state);
 
