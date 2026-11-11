@@ -12,10 +12,16 @@ public class Controller {
     private final IRepository repo;
     private boolean displayFlag;
 
+
     public Controller(IRepository repo) {
-        this.repo = repo;
-        this.displayFlag = false;
+        this(repo, false);
     }
+
+    public Controller(IRepository repo, boolean displayFlag) {
+        this.repo = repo;
+        this.displayFlag = displayFlag;
+    }
+
 
     public void setDisplayFlag(boolean displayFlag) {
         this.displayFlag = displayFlag;

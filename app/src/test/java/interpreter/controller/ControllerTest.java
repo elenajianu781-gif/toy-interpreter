@@ -132,9 +132,7 @@ class ControllerTest {
     @Test
     void testExample1() throws MyException {
 
-        PrgState state = runProgram(
-                Examples.getPrograms().get(0)
-        );
+        PrgState state = runProgram(Examples.EX1);
 
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(1, state.getOut().size());
@@ -148,9 +146,7 @@ class ControllerTest {
     @Test
     void testExample2() throws MyException {
 
-        PrgState state = runProgram(
-                Examples.getPrograms().get(1)
-        );
+        PrgState state = runProgram(Examples.EX2);
 
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(1, state.getOut().size());
@@ -164,9 +160,7 @@ class ControllerTest {
     @Test
     void testExample3() throws MyException {
 
-        PrgState state = runProgram(
-                Examples.getPrograms().get(2)
-        );
+        PrgState state = runProgram(Examples.EX3);
 
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(1, state.getOut().size());
@@ -208,6 +202,65 @@ class ControllerTest {
         assertTrue(0 <= a && a < b && b < c && c < d);
     }
 
+
+    @Test
+    void fileExampleReadsBothNumbersAndClosesFile()
+            throws Exception {
+
+        Path input = dir.resolve("test.in");
+        Files.writeString(input, "15\n50\n");
+
+        PrgState state = PrgState.of(
+                Examples.fileExample(input.toString())
+        );
+
+        Repository repo = new Repository(
+                state,
+                dir.resolve("log4.txt").toString()
+        );
+
+        new Controller(repo, false).allStep();
+
+        assertEquals(new IntValue(15), state.getOut().get(0));
+        assertEquals(new IntValue(50), state.getOut().get(1));
+        assertTrue(state.getFileTable().toMap().isEmpty());
+    }
+
+    @Test
+    void relationalExamplePrintsFive() throws Exception {
+        PrgState state = PrgState.of(Examples.EX5);
+
+        Repository repo = new Repository(
+                state,
+                dir.resolve("log5.txt").toString()
+        );
+
+        new Controller(repo, false).allStep();
+
+        assertEquals(new IntValue(5), state.getOut().get(0));
+    }
+
+
+    @Test
+    void fileExampleWithEmptyFilePrintsZeros() throws Exception {
+        Path input = dir.resolve("empty.in");
+        Files.writeString(input, "");
+
+        PrgState state = PrgState.of(
+                Examples.fileExample(input.toString())
+        );
+
+        Repository repo = new Repository(
+                state,
+                dir.resolve("empty-log.txt").toString()
+        );
+
+        new Controller(repo, false).allStep();
+
+        assertEquals(new IntValue(0), state.getOut().get(0));
+        assertEquals(new IntValue(0), state.getOut().get(1));
+        assertTrue(state.getFileTable().toMap().isEmpty());
+    }
 
 
 
