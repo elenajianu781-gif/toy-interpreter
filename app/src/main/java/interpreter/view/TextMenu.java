@@ -83,7 +83,8 @@ public class TextMenu {
 
             PrgState state = PrgState.of(program);
 
-            Repository repository = new Repository(state);
+            Repository repository = new Repository( PrgState.of(program),
+                    "log1.txt");
             Controller controller = new Controller(repository);
 
             controller.setDisplayFlag(true);

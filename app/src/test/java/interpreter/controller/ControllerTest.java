@@ -15,6 +15,9 @@ import interpreter.repository.Repository;
 import org.junit.jupiter.api.Test;
 import interpreter.model.stmt.IStmt;
 import interpreter.view.Examples;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +28,7 @@ class ControllerTest {
 
         PrgState state = PrgState.of(program);
 
-        Repository repository = new Repository(state);
+        Repository repository = new Repository(state,"log-test.txt");
         Controller controller = new Controller(repository);
 
         controller.setDisplayFlag(false);
@@ -42,7 +45,7 @@ class ControllerTest {
                 new PrintStmt(new ValueExp(new IntValue(10)))
         );
 
-        Repository repository = new Repository(state);
+        Repository repository = new Repository(state,"log-test.txt");
         Controller controller = new Controller(repository);
 
         controller.oneStep(state);
@@ -61,7 +64,7 @@ class ControllerTest {
 
         PrgState state = PrgState.of(new NopStmt());
 
-        Repository repository = new Repository(state);
+        Repository repository = new Repository(state,"log-test.txt");
         Controller controller = new Controller(repository);
 
         controller.oneStep(state);
@@ -89,7 +92,7 @@ class ControllerTest {
 
         PrgState state = PrgState.of(program);
 
-        Repository repository = new Repository(state);
+        Repository repository = new Repository(state,"log-test.txt");
         Controller controller = new Controller(repository);
 
         controller.allStep();
@@ -116,7 +119,7 @@ class ControllerTest {
     void testEmptyStackThrowsStatementException() throws MyException {
         PrgState state = PrgState.of(new NopStmt());
 
-        Controller controller = new Controller(new Repository(state));
+        Controller controller = new Controller(new Repository(state,"log-test.txt"));
 
         controller.oneStep(state);
 
@@ -173,6 +176,38 @@ class ControllerTest {
                 state.getOut().get(0)
         );
     }
+
+
+    @TempDir
+    Path dir;
+
+    @Test
+    void logFileContainsFourSectionsInOrder() throws Exception {
+        PrgState state = PrgState.of(
+                new PrintStmt(new ValueExp(new IntValue(10)))
+        );
+
+        Path logPath = dir.resolve("log.txt");
+
+        Repository repo = new Repository(
+                state,
+                logPath.toString()
+        );
+
+        Controller controller = new Controller(repo);
+        controller.setDisplayFlag(false);
+        controller.allStep();
+
+        String log = Files.readString(logPath);
+
+        int a = log.indexOf("ExeStack:");
+        int b = log.indexOf("SymTable:");
+        int c = log.indexOf("Out:");
+        int d = log.indexOf("FileTable:");
+
+        assertTrue(0 <= a && a < b && b < c && c < d);
+    }
+
 
 
 

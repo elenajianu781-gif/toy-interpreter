@@ -9,3 +9,6 @@ build
 
 # Ignore IntelliJ IDEA files
 .idea/
+
+# Ignore generated log files
+log*.txt
