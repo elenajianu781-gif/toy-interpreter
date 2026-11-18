@@ -3,9 +3,12 @@ import interpreter.model.adt.*;
 import interpreter.model.stmt.IStmt;
 import interpreter.model.value.IValue;
 import java.io.BufferedReader;
+import java.util.TreeMap;
+
 import interpreter.model.adt.MyStack;
 import interpreter.model.adt.MyDictionary;
 import interpreter.model.adt.MyList;
+import interpreter.model.adt.MyHeap;
 
 import interpreter.model.value.StringValue;
 
@@ -16,18 +19,22 @@ public class PrgState {
     private final IList<IValue> out;
     private final IStmt originalProgram;
     private IDictionary<StringValue, BufferedReader> fileTable;
+    private final IHeap heap;
 
     public PrgState(
             IStack<IStmt> exeStack,
             IDictionary<String, IValue> symTable,
             IList<IValue> out,
             IDictionary<StringValue, BufferedReader> fileTable,
+            IHeap heap,
             IStmt originalProgram
+
     ) {
         this.exeStack = exeStack;
         this.symTable = symTable;
         this.out = out;
         this.fileTable = fileTable;
+        this.heap = heap;
         this.originalProgram = originalProgram;
 
         exeStack.push(originalProgram);
@@ -58,6 +65,7 @@ public class PrgState {
                 new MyDictionary<>(),
                 new MyList<>(),
                 new MyDictionary<>(),
+                new MyHeap(),
                 program
         );
     }
@@ -95,7 +103,19 @@ public class PrgState {
                 sb.append(f.val()).append('\n')
         );
 
+        sb.append("Heap:\n");
+
+        new TreeMap<>(heap.getContent()).forEach((address, value) ->
+                sb.append(address)
+                        .append(" --> ")
+                        .append(value)
+                        .append("\n")
+        );
+
         return sb.toString();
+    }
+    public IHeap getHeap() {
+        return heap;
     }
 
 
