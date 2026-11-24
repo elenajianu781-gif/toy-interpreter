@@ -3,7 +3,9 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import interpreter.model.value.IValue;
@@ -16,6 +18,8 @@ class LogicExpTest {
     private final IDictionary<String, IValue> symTable =
             new MyDictionary<>();
 
+    IHeap heap = new MyHeap();
+
     private static IExp bool(boolean value) {
         return new ValueExp(new BoolValue(value));
     }
@@ -26,7 +30,7 @@ class LogicExpTest {
                 LogicOp.AND, bool(true), bool(true)
         );
 
-        assertEquals(new BoolValue(true), exp.eval(symTable));
+        assertEquals(new BoolValue(true), exp.eval(symTable,heap));
     }
 
     @Test
@@ -35,7 +39,7 @@ class LogicExpTest {
                 LogicOp.AND, bool(true), bool(false)
         );
 
-        assertEquals(new BoolValue(false), exp.eval(symTable));
+        assertEquals(new BoolValue(false), exp.eval(symTable,heap));
     }
 
     @Test
@@ -44,7 +48,7 @@ class LogicExpTest {
                 LogicOp.OR, bool(false), bool(true)
         );
 
-        assertEquals(new BoolValue(true), exp.eval(symTable));
+        assertEquals(new BoolValue(true), exp.eval(symTable,heap));
     }
 
     @Test
@@ -53,7 +57,7 @@ class LogicExpTest {
                 LogicOp.OR, bool(false), bool(false)
         );
 
-        assertEquals(new BoolValue(false), exp.eval(symTable));
+        assertEquals(new BoolValue(false), exp.eval(symTable,heap));
     }
 
     @Test
@@ -66,7 +70,7 @@ class LogicExpTest {
 
         assertThrows(
                 ExpressionException.class,
-                () -> exp.eval(symTable)
+                () -> exp.eval(symTable,heap)
         );
     }
 
@@ -80,7 +84,7 @@ class LogicExpTest {
 
         assertThrows(
                 ExpressionException.class,
-                () -> exp.eval(symTable)
+                () -> exp.eval(symTable,heap)
         );
     }
 }

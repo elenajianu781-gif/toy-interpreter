@@ -3,6 +3,7 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
 
@@ -13,10 +14,10 @@ public record ArithExp(
 ) implements IExp {
 
     @Override
-    public IValue eval(IDictionary<String, IValue> symTable)
+    public IValue eval(IDictionary<String, IValue> symTable, IHeap heap)
             throws MyException {
 
-        IValue leftValue = left.eval(symTable);
+        IValue leftValue = left.eval(symTable,heap);
 
         if (!(leftValue instanceof IntValue n1)) {
             throw new ExpressionException(
@@ -24,7 +25,7 @@ public record ArithExp(
             );
         }
 
-        IValue rightValue = right.eval(symTable);
+        IValue rightValue = right.eval(symTable,heap);
 
         if (!(rightValue instanceof IntValue n2)) {
             throw new ExpressionException(

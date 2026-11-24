@@ -16,7 +16,8 @@ public record IfStmt(
     @Override
     public PrgState execute(PrgState state) throws MyException {
 
-        IValue value = condition.eval(state.getSymTable());
+        IValue value = condition.eval(state.getSymTable(), state.getHeap());
+
 
         if (!(value instanceof BoolValue boolValue)) {
             throw new StatementException(

@@ -2,6 +2,7 @@
 package interpreter.model.exp;
 
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class ValueExpTest {
 
         assertEquals(
                 new IntValue(10),
-                exp.eval(new MyDictionary<>())
+                exp.eval(new MyDictionary<>(),new MyHeap())
         );
     }
 
@@ -26,7 +27,7 @@ class ValueExpTest {
 
         assertEquals(
                 new BoolValue(true),
-                exp.eval(new MyDictionary<>())
+                exp.eval(new MyDictionary<>(),new MyHeap())
         );
     }
 }

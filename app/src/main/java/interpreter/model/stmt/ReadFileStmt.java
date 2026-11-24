@@ -2,6 +2,7 @@
 package interpreter.model.stmt;
 
 import interpreter.model.PrgState;
+import interpreter.model.adt.IHeap;
 import interpreter.model.exp.IExp;
 import interpreter.model.value.IntValue;
 import interpreter.model.value.StringValue;
@@ -18,6 +19,7 @@ public record ReadFileStmt(IExp exp, String varName) implements IStmt {
 
         var symTable = state.getSymTable();
         var fileTable = state.getFileTable();
+        IHeap heap = state.getHeap();
 
         if (!symTable.isDefined(varName)) {
             throw new StatementException(
@@ -32,7 +34,7 @@ public record ReadFileStmt(IExp exp, String varName) implements IStmt {
             );
         }
 
-        if (!(exp.eval(symTable) instanceof StringValue fileName)) {
+        if (!(exp.eval(symTable,heap) instanceof StringValue fileName)) {
             throw new StatementException(
                     "readFile: expression is not a string"
             );

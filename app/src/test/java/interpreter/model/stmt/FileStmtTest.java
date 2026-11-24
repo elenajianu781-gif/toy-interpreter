@@ -81,7 +81,7 @@ class FileStmtTest {
         new OpenRFileStmt(file).execute(state);
 
         assertTrue(state.getFileTable().isDefined(
-                (StringValue) file.eval(state.getSymTable())
+                (StringValue) file.eval(state.getSymTable(),state.getHeap())
         ));
 
         new CloseRFileStmt(file).execute(state);
@@ -178,7 +178,7 @@ class FileStmtTest {
         new OpenRFileStmt(file).execute(state);
 
         StringValue fileName =
-                (StringValue) file.eval(state.getSymTable());
+                (StringValue) file.eval(state.getSymTable(),state.getHeap());
 
         assertTrue(state.getFileTable().isDefined(fileName));
 

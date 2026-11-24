@@ -1,6 +1,7 @@
 package interpreter.model.exp;
 
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.*;
 import interpreter.exceptions.ExpressionException;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,7 +40,7 @@ public class RelationalExpTest {
 
         assertEquals(
                 new BoolValue(expected),
-                exp.eval(new MyDictionary<>())
+                exp.eval(new MyDictionary<>(),new MyHeap())
         );
     }
 
@@ -53,7 +54,7 @@ public class RelationalExpTest {
 
         assertThrows(
                 ExpressionException.class,
-                () -> exp.eval(new MyDictionary<>())
+                () -> exp.eval(new MyDictionary<>(),new MyHeap())
         );
     }
 
