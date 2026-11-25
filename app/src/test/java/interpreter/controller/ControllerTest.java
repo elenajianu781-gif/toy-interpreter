@@ -10,7 +10,9 @@ import interpreter.model.exp.ValueExp;
 import interpreter.model.exp.VarExp;
 import interpreter.model.stmt.*;
 import interpreter.model.type.IntType;
+import interpreter.model.type.RefType;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.RefValue;
 import interpreter.repository.Repository;
 import org.junit.jupiter.api.Test;
 import interpreter.model.stmt.IStmt;
@@ -176,7 +178,7 @@ class ControllerTest {
     Path dir;
 
     @Test
-    void logFileContainsFourSectionsInOrder() throws Exception {
+    void logFileContainsFiveSectionsInOrder() throws Exception {
         PrgState state = PrgState.of(
                 new PrintStmt(new ValueExp(new IntValue(10)))
         );
@@ -198,8 +200,8 @@ class ControllerTest {
         int b = log.indexOf("SymTable:");
         int c = log.indexOf("Out:");
         int d = log.indexOf("FileTable:");
-
-        assertTrue(0 <= a && a < b && b < c && c < d);
+        int e = log.indexOf("Heap:");
+        assertTrue(0 <= a && a < b && b < c && c < d && d < e);
     }
 
 
@@ -261,6 +263,54 @@ class ControllerTest {
         assertEquals(new IntValue(0), state.getOut().get(1));
         assertTrue(state.getFileTable().toMap().isEmpty());
     }
+
+    @Test
+    void testExample6() throws MyException {
+        PrgState state = runProgram(Examples.Ex6);
+
+        assertEquals(new RefValue(1, new IntType()),
+                state.getOut().get(0));
+        assertEquals(new RefValue(2, new RefType(new IntType())),
+                state.getOut().get(1));
+    }
+
+    @Test
+    void testExample7() throws MyException {
+        PrgState state = runProgram(Examples.EX7);
+
+        assertEquals(new IntValue(20), state.getOut().get(0));
+        assertEquals(new IntValue(25), state.getOut().get(1));
+    }
+
+    @Test
+    void testExample8() throws MyException {
+        PrgState state = runProgram(Examples.EX8);
+
+        assertEquals(new IntValue(20), state.getOut().get(0));
+        assertEquals(new IntValue(35), state.getOut().get(1));
+        assertEquals(new IntValue(30), state.getHeap().get(1));
+    }
+
+    @Test
+    void testExample9() throws MyException {
+        PrgState state = runProgram(Examples.EX9);
+
+        assertEquals(new IntValue(20), state.getOut().get(0));
+        assertEquals(new IntValue(20), state.getHeap().get(1));
+    }
+
+    @Test
+    void testExample10() throws MyException {
+        PrgState state = runProgram(Examples.EX10);
+
+        assertEquals(5, state.getOut().size());
+
+        for (int i = 0; i < 5; i++) {
+            assertEquals(new IntValue(4 - i),
+                    state.getOut().get(i));
+        }
+    }
+
 
 
 
