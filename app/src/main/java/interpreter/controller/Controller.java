@@ -48,7 +48,23 @@ public class Controller {
 
         while (!prg.getExeStack().isEmpty()) {
             oneStep(prg);
+
+            // Log the state before garbage collection
             repo.logPrgStateExec();
+
+            // Remove unreachable heap locations
+            prg.getHeap().setContent(
+                    GarbageCollector.safeGarbageCollector(
+                            GarbageCollector.getAddrFromSymTable(
+                                    prg.getSymTable().toMap().values()
+                            ),
+                            prg.getHeap().getContent()
+                    )
+            );
+
+            // Log the state after garbage collection
+            repo.logPrgStateExec();
+
             display(prg);
         }
     }
